@@ -13,16 +13,23 @@ import android.view.ViewGroup
  * @Date: 2017/6/9.15:41
  * @E-mail: 49467306@qq.com
  */
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), View.OnClickListener {
     protected abstract fun getFragmentView(): View?
     protected abstract fun getFragmentViewByLayoutId(): Int
     private var mView: View? = null
+    protected abstract fun initData()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (getFragmentView() != null) {
             mView = getFragmentView()
-            return mView
         }
-        mView = inflater.inflate(getFragmentViewByLayoutId(), container, false)
+        if (mView == null)
+            mView = inflater.inflate(getFragmentViewByLayoutId(), container, false)
+
         return mView
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initData()
     }
 }

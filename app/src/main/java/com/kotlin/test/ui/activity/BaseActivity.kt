@@ -29,7 +29,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
 
     abstract protected fun initViews()
 
-    abstract protected fun initDatas()
+    abstract protected fun initData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
         else
             setContentView(getContentViewLayoutId())
         initViews()
-        initDatas()
+        initData()
     }
 
     /**
@@ -62,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
                     supportFragmentManager.beginTransaction().hide(framentOld).commitAllowingStateLoss()
                 }
             }
-            supportFragmentManager.beginTransaction().show(fragment)
+            supportFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss()
         } else {
             if (fragmens != null) {
                 for (framentOld in fragmens) {

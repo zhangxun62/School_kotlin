@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="id_container" type="id"/>
+    <item name="id_tab_layout" type="id"/>
+    <item name="id_tv_title" type="id"/>
+    <item name="id_swipeRefreshLayout" type="id"/>
+    <item name="id_recyclerView" type="id"/>
 </resources>
