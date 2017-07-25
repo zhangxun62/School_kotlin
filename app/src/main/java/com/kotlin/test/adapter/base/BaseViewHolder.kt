@@ -19,7 +19,7 @@ class BaseViewHolder : RecyclerView.ViewHolder {
     private var mConvertView: View? = null
     private var mViews: SparseArray<View>? = null
 
-    constructor(itemView: View, parent: ViewGroup) : super(itemView) {
+    constructor(itemView: View) : super(itemView) {
         mConvertView = itemView
         mViews = SparseArray<View>()
     }
@@ -49,9 +49,13 @@ class BaseViewHolder : RecyclerView.ViewHolder {
     }
 
     companion object {
-        fun get(context: Context, parent: ViewGroup, layoutId: Int): BaseViewHolder {
+        fun createViewHolder(context: Context, parent: ViewGroup, layoutId: Int): BaseViewHolder {
             var itemView = LayoutInflater.from(context).inflate(layoutId, parent, false) as View
-            return BaseViewHolder(itemView, parent)
+            return BaseViewHolder(itemView)
+        }
+
+        fun createViewHolder(itemView: View): BaseViewHolder {
+            return BaseViewHolder(itemView)
         }
     }
 }

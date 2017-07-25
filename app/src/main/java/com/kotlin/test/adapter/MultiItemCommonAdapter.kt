@@ -41,7 +41,7 @@ open class MultiItemCommonAdapter<T> : RecyclerView.Adapter<BaseViewHolder> {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         var itemViewDelegate: ItemViewDelegate<T> = mItemViewDelegateManager.getItemViewDelegate(viewType)
         var layoutId: Int = itemViewDelegate.getViewItemLayoutId()
-        var viewHolder: BaseViewHolder = BaseViewHolder.get(parent.context, parent, layoutId)
+        var viewHolder: BaseViewHolder = BaseViewHolder.createViewHolder(parent.context, parent, layoutId)
         return viewHolder
     }
 
