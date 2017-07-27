@@ -1,6 +1,7 @@
 package com.kotlin.test.adapter.wrapper
 
 import android.support.v4.util.SparseArrayCompat
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -100,6 +101,34 @@ class HeaderAndFooterWrapper : RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     fun addFooterView(view: View) {
         mFooterViews.put(mFooterViews.size() + ITEM_TYPE_FOOTER, view)
+    }
+
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        WrapperUtils.onAttachedToRecyclerView(mAdapter, recyclerView, object : WrapperUtils.SpanSizeCallback {
+            override fun getSpanSize(layoutManager: GridLayoutManager, oldLookup: GridLayoutManager.SpanSizeLookup, position: Int): Int {
+                var itemType: Int = getItemViewType(position)
+                if (mHeaderViews[itemType] != null) {
+                    return layoutManager.spanCount
+                } else if (mFooterViews[itemType] != null) {
+                    return layoutManager.spanCount
+                }
+                if (oldLookup != null) {
+                    return oldLookup.getSpanSize(position)
+                }
+                return 1
+            }
+
+        })
+
+    }
+
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        mAdapter.onViewAttachedToWindow(holder)
+        var position = holder.layoutPosition
+        if (isFooterViewPos(position) || isHeaderViewPos(position)) {
+            WrapperUtils.setFullSpan(holder)
+        }
     }
 
     companion object {
