@@ -5,4 +5,8 @@
     <item name="id_tv_title" type="id"/>
     <item name="id_swipeRefreshLayout" type="id"/>
     <item name="id_recyclerView" type="id"/>
+    <item name="id_et_account" type="id"/>
+    <item name="id_et_password" type="id"/>
+    <item name="id_btn_login" type="id"/>
+    <item name="id_tv_register" type="id"/>
 </resources>
