@@ -7,7 +7,7 @@ package com.kotlin.test.entity
  * @Date: 2017/5/23.14:11
  * @E-mail: 49467306@qq.com
  */
-data class People (
+data class User (
         var name:String,
         var url:String
 )

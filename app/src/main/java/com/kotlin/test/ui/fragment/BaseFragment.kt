@@ -17,7 +17,7 @@ import android.widget.Toast
 abstract class BaseFragment : Fragment(), View.OnClickListener {
     protected abstract fun getFragmentView(): View?
     protected abstract fun getFragmentViewByLayoutId(): Int
-    private var mView: View? = null
+    protected var mView: View? = null
     protected abstract fun initData()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (getFragmentView() != null) {
@@ -40,5 +40,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
      */
     fun toast(msg: String) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun <T : View> findId(id: Int): T {
+        return mView!!.findViewById(id) as T
     }
 }

@@ -2,6 +2,7 @@ package com.kotlin.test.ui.fragment
 
 import android.view.View
 import com.kotlin.test.R
+import com.kotlin.test.ui.activity.BaseActivity
 import kotlinx.android.synthetic.main.fragment_login.*
 
 /**
@@ -27,7 +28,7 @@ class LoginFragment : BaseFragment() {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.id_tv_register -> {
-                toast("注册被单击")
+                (context as BaseActivity).addFragment(R.id.id_container, RegisterFragment())
             }
             else -> {
             }

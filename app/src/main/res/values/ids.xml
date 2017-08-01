@@ -9,4 +9,6 @@
     <item name="id_et_password" type="id"/>
     <item name="id_btn_login" type="id"/>
     <item name="id_tv_register" type="id"/>
+    <item name="id_tv_forget" type="id"/>
+    <item name="id_btn_register" type="id"/>
 </resources>
