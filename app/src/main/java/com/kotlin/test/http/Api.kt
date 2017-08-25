@@ -17,4 +17,8 @@ interface Api {
     @POST("restful/users/login")
     @Headers("Content-Type: application/json", "Accept: application/json") //需要添加头
     fun login(@Body body: RequestBody): Flowable<String>
+
+    @POST("restful/users/register")
+    @Headers("Content-Type: application/json", "Accept: application/json") //需要添加头
+    fun register(@Body body: RequestBody): Flowable<String>
 }

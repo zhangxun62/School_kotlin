@@ -14,7 +14,7 @@ import okhttp3.RequestBody
 
 /**
  * @Title RegisterFragment
- * @Description:
+ * @Description: 注册页面
  * @Author: alvin
  * @Date: 2017/8/1.13:57
  * @E-mail: 49467306@qq.com
@@ -59,7 +59,7 @@ class RegisterFragment : BaseFragment() {
         map.put("account", account.text.toString())
         map.put("password", password.text.toString())
         var body: RequestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), Gson().toJson(map))
-        HttpClient().mApi.login(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
+        HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
             t ->
             toast(t)
         }, { t -> t.printStackTrace() })
