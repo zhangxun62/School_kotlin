@@ -81,7 +81,7 @@ class HttpClient {
                 val requestBuilder = originalRequest.newBuilder()
                         //                            .header("AppType", "TPOS")
                         .header("Content-Type", "application/json")
-                        .header("Accept", "application/json")
+//                        .header("Accept", "application/json")
                         .method(originalRequest.method(), originalRequest.body())
                 val request = requestBuilder.build()
                 chain.proceed(request)
@@ -131,14 +131,14 @@ class HttpClient {
 
      * @return
      */
-    fun isNetWorkAvailable(context: Context): Boolean {
+    private fun isNetWorkAvailable(context: Context): Boolean {
         val manager = context
                 .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (manager != null) {
+        return if (manager != null) {
             val info = manager.activeNetworkInfo
-            return info != null && info.isConnected
+            info != null && info.isConnected
         } else {
-            return false
+            false
         }
 
     }

@@ -1,8 +1,10 @@
 package com.kotlin.test.ui.activity
 
+import android.R
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 
@@ -45,8 +47,12 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
      * 显示Toast提示框
      * @param msg
      */
-    fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    fun toast(msg: String, flag: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this, msg, flag).show()
+    }
+
+    inline fun <reified T> debug(log: Any) {
+        Log.d(T::class.simpleName, log.toString())
     }
 
     /**

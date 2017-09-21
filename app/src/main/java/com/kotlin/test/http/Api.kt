@@ -1,5 +1,7 @@
 package com.kotlin.test.http
 
+import com.kotlin.test.entity.HttpResponse
+import com.kotlin.test.entity.UserInfo
 import io.reactivex.Flowable
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -15,10 +17,10 @@ import retrofit2.http.POST
  */
 interface Api {
     @POST("restful/users/login")
-    @Headers("Content-Type: application/json", "Accept: application/json") //需要添加头
-    fun login(@Body body: RequestBody): Flowable<String>
+    @Headers("Content-Type:application/json") //需要添加头
+    fun login(@Body body: RequestBody): Flowable<HttpResponse<UserInfo>>
 
     @POST("restful/users/register")
-    @Headers("Content-Type: application/json", "Accept: application/json") //需要添加头
+    @Headers("Content-Type: application/json") //需要添加头
     fun register(@Body body: RequestBody): Flowable<String>
 }

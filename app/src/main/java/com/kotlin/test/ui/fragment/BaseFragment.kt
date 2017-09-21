@@ -17,7 +17,7 @@ import android.widget.Toast
 abstract class BaseFragment : Fragment(), View.OnClickListener {
     protected abstract fun getFragmentView(): View?
     protected abstract fun getFragmentViewByLayoutId(): Int
-    protected var mView: View? = null
+    private var mView: View? = null
     protected abstract fun initData()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (getFragmentView() != null) {
@@ -38,8 +38,8 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
      * 显示Toast提示框
      * @param msg
      */
-    fun toast(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    fun toast(msg: String, flag: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(context, msg, flag).show()
     }
 
     fun <T : View> findId(id: Int): T {

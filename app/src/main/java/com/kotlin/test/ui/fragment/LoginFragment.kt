@@ -7,6 +7,7 @@ import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
 import com.kotlin.test.ui.activity.BaseActivity
 import com.kotlin.test.util.RsaUtil
+import com.kotlin.test.util.RxJavaUtil
 import com.kotlin.test.widget.ClearEditText
 import com.tencent.bugly.beta.global.e
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,6 +17,7 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import okhttp3.Response
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 /**
  * @Title LoginFragment
@@ -35,7 +37,10 @@ class LoginFragment : BaseFragment() {
 
     override fun initData() {
         id_tv_register.setOnClickListener(this)
-        id_btn_login.setOnClickListener(this)
+//        id_btn_login.setOnClickListener(this)
+        RxJavaUtil.clickView(id_btn_login).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe {
+            initLogin()
+        }
     }
 
     override fun onClick(v: View) {
@@ -43,16 +48,16 @@ class LoginFragment : BaseFragment() {
             R.id.id_tv_register -> {
                 (context as BaseActivity).addFragment(R.id.id_container, RegisterFragment())
             }
-            R.id.id_btn_login -> {
-                initLogin()
-            }
             else -> {
 
             }
         }
     }
 
-    fun initLogin() {
+    /**
+     * 登录
+     */
+    private fun initLogin() {
         var account = findId<ClearEditText>(R.id.id_et_account)
         var password = findId<ClearEditText>(R.id.id_et_password)
         if (account.text.isEmpty()) {
@@ -68,17 +73,16 @@ class LoginFragment : BaseFragment() {
         var map = HashMap<String, String>()
         map.put("account", account.text.toString())
         map.put("password", password.text.toString())
-        Log.i("测试", RsaUtil.encryptWithRSA(Gson().toJson(map)))
-        var body: RequestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), Gson().toJson(map))
-        HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            t ->
-            toast(t)
-            Log.i("测试", t)
+        var data = RsaUtil.encryptWithRSA(Gson().toJson(map))
+        var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), data)
+        HttpClient().mApi.login(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
+            Log.i("测试", t.data.uuid)
         }, { t ->
             t.printStackTrace()
-            var e: HttpException = t as HttpException
-
-            Log.i("测试", e.response().errorBody()!!.string())
+            if (t is HttpException) {
+                var e: HttpException = t
+                Log.i("测试", e.response().errorBody()!!.string())
+            }
 
         })
     }
