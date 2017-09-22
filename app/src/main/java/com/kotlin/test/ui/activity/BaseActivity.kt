@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.kotlin.test.util.ActivityCollector
 
 /**
  * @Title BaseActivity
@@ -39,6 +40,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
             setContentView(getContentView())
         else
             setContentView(getContentViewLayoutId())
+        ActivityCollector.addActivity(this)
         initViews()
         initData()
     }
@@ -61,21 +63,26 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
      * @param fragment
      */
     fun addFragment(containerId: Int, fragment: Fragment) {
-        var fragmens: List<Fragment>? = supportFragmentManager.fragments
+        var fragments: List<Fragment>? = supportFragmentManager.fragments
         if (fragment.isAdded) {
-            if (fragmens != null) {
-                for (framentOld in fragmens) {
-                    supportFragmentManager.beginTransaction().hide(framentOld).commitAllowingStateLoss()
+            if (fragments != null) {
+                for (fragmentOld in fragments) {
+                    supportFragmentManager.beginTransaction().hide(fragmentOld).commitAllowingStateLoss()
                 }
             }
             supportFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss()
         } else {
-            if (fragmens != null) {
-                for (framentOld in fragmens) {
-                    supportFragmentManager.beginTransaction().hide(framentOld).commitAllowingStateLoss()
+            if (fragments != null) {
+                for (fragmentOld in fragments) {
+                    supportFragmentManager.beginTransaction().hide(fragmentOld).commitAllowingStateLoss()
                 }
             }
             supportFragmentManager.beginTransaction().add(containerId, fragment, fragment.javaClass.simpleName).show(fragment).commitNowAllowingStateLoss()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        ActivityCollector.removeActivity(this)
     }
 }

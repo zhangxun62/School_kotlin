@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
  * @Date: 2017/9/19.14:06
  * @E-mail: 49467306@qq.com
  */
-class Preference<T>(val context: Context, val key: String, val default: T) : ReadWriteProperty<Any?, T> {
+class Preference<T>(val context: Context, private val key: String, private val default: T) : ReadWriteProperty<Any?, T> {
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return findPreference(key, default)
     }
@@ -21,7 +21,7 @@ class Preference<T>(val context: Context, val key: String, val default: T) : Rea
         putPreference(key, default)
     }
 
-    val prefs by lazy { context.getSharedPreferences("default", Context.MODE_PRIVATE) }
+    private val prefs by lazy { context.getSharedPreferences("default", Context.MODE_PRIVATE) }
     private fun <U> findPreference(key: String, default: U): U = with(prefs) {
         val res: Any = when (default) {
             is Long -> getLong(key, default)

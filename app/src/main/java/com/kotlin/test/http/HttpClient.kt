@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  */
 class HttpClient {
     var mRetrofit: Retrofit? = null
-    fun retrofit(): Retrofit {
+    private fun retrofit(): Retrofit {
         if (mRetrofit == null) {
             var builder = OkHttpClient.Builder()
 

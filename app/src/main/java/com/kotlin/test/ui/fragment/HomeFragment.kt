@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  */
 class HomeFragment : BaseFragment() {
     var mTitle: String = ""
-    var mAapter: CommonAdapter<String>? = null
+    private var mAdapter: CommonAdapter<String>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (this.arguments != null) {
@@ -42,15 +42,15 @@ class HomeFragment : BaseFragment() {
         id_recyclerView.layoutManager = LinearLayoutManager(context)
         id_recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         val asc = Array(5, { i -> (i * i).toString() })
-        if (mAapter == null) {
-            mAapter = object : CommonAdapter<String>(android.R.layout.simple_list_item_1, asc.asList()) {
+        if (mAdapter == null) {
+            mAdapter = object : CommonAdapter<String>(android.R.layout.simple_list_item_1, asc.asList()) {
                 override fun convert(holder: BaseViewHolder, item: String, position: Int) {
                     var view = holder.itemView as TextView
                     view.text = item
                 }
             }
         }
-        id_recyclerView.adapter = mAapter
+        id_recyclerView.adapter = mAdapter
     }
 
     companion object {

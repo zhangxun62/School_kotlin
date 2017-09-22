@@ -1,23 +1,27 @@
 package com.kotlin.test.ui.fragment
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import com.google.gson.Gson
 import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
 import com.kotlin.test.ui.activity.BaseActivity
+import com.kotlin.test.ui.activity.MainActivity
+import com.kotlin.test.util.ActivityCollector
+import com.kotlin.test.util.Preference
 import com.kotlin.test.util.RsaUtil
 import com.kotlin.test.util.RxJavaUtil
 import com.kotlin.test.widget.ClearEditText
-import com.tencent.bugly.beta.global.e
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import okhttp3.Response
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
+
 
 /**
  * @Title LoginFragment
@@ -59,7 +63,7 @@ class LoginFragment : BaseFragment() {
      */
     private fun initLogin() {
         var account = findId<ClearEditText>(R.id.id_et_account)
-        var password = findId<ClearEditText>(R.id.id_et_password)
+        var password = findId<EditText>(R.id.id_et_password)
         if (account.text.isEmpty()) {
             account.error = "用户名不能为空"
             account.requestFocus()
@@ -76,7 +80,13 @@ class LoginFragment : BaseFragment() {
         var data = RsaUtil.encryptWithRSA(Gson().toJson(map))
         var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), data)
         HttpClient().mApi.login(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
-            Log.i("测试", t.data.uuid)
+            // 遍历实体类 取得实体类属性和类型，属性值
+            for (field in t.data.javaClass.declaredFields) {
+                field.isAccessible = true
+                Preference(context, field.name, field.get(t.data))
+            }
+            startActivity(Intent(context, MainActivity::class.java))
+            ActivityCollector.removeActivity(context)
         }, { t ->
             t.printStackTrace()
             if (t is HttpException) {

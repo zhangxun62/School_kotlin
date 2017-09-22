@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  * 主界面
  */
 class MainActivity : BaseActivity(), MDTabLayout.ItemCheckedListener {
-    var mFragments = arrayListOf<Fragment>()
+    private var mFragments = arrayListOf<Fragment>()
     override fun onItemChecked(position: Int, view: View) {
         addFragment(R.id.id_container, mFragments[position])
     }

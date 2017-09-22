@@ -1,16 +1,20 @@
 package com.kotlin.test.ui.fragment
 
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
+import android.widget.EditText
 import com.google.gson.Gson
 import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
+import com.kotlin.test.util.RsaUtil
 import com.kotlin.test.widget.ClearEditText
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import retrofit2.HttpException
 
 /**
  * @Title RegisterFragment
@@ -42,9 +46,9 @@ class RegisterFragment : BaseFragment() {
         }
     }
 
-    fun submit() {
+    private fun submit() {
         var account = findId<ClearEditText>(R.id.id_et_account)
-        var password = findId<ClearEditText>(R.id.id_et_password)
+        var password = findId<EditText>(R.id.id_et_password)
         if (TextUtils.isEmpty(account.text)) {
             account.error = "用户名不能为空"
             account.requestFocus()
@@ -58,10 +62,15 @@ class RegisterFragment : BaseFragment() {
         var map = HashMap<String, String>()
         map.put("account", account.text.toString())
         map.put("password", password.text.toString())
-        var body: RequestBody = RequestBody.create(MediaType.parse("application/json;charset=UTF-8"), Gson().toJson(map))
-        HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({
-            t ->
-            toast(t)
-        }, { t -> t.printStackTrace() })
+        var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), RsaUtil.encryptWithRSA(Gson().toJson(map)))
+        HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
+            Log.i("测试", Gson().toJson(t))
+        }, { t ->
+            t.printStackTrace()
+            if (t is HttpException) {
+                var e: HttpException = t
+                Log.i("测试", e.response().errorBody()!!.string())
+            }
+        })
     }
 }
