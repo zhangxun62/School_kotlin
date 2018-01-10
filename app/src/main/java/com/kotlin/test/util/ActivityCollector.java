@@ -20,13 +20,11 @@ public class ActivityCollector {
     }
 
     public static void removeActivity(Activity activity) {
-        activity.finish();
         activities.remove(activity);
     }
 
     public static void removeActivity(Context context) {
         Activity activity = (Activity) context;
-        activity.finish();
         activities.remove(activity);
     }
 

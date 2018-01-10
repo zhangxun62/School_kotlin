@@ -43,7 +43,14 @@ class LoginFragment : BaseFragment() {
         id_tv_register.setOnClickListener(this)
 //        id_btn_login.setOnClickListener(this)
         RxJavaUtil.clickView(id_btn_login).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe {
-            initLogin()
+                        initLogin()
+//            var password = findId<EditText>(R.id.id_et_password)
+//            TransitionManager.beginDelayedTransition(id_rootLayout, AutoTransition())
+//            if (password.visibility != View.VISIBLE) {
+//                password.visibility = View.VISIBLE
+//            } else {
+//                password.visibility = View.GONE
+//            }
         }
     }
 

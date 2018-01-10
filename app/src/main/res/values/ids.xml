@@ -11,4 +11,5 @@
     <item name="id_tv_register" type="id"/>
     <item name="id_tv_forget" type="id"/>
     <item name="id_btn_register" type="id"/>
+    <item name="id_rootLayout" type="id"/>
 </resources>
