@@ -36,11 +36,18 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getContentView() != null)
+        if (getContentView() != null) {
             setContentView(getContentView())
-        else
+        }
+        else {
             setContentView(getContentViewLayoutId())
+        }
         ActivityCollector.addActivity(this)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         initViews()
         initData()
     }

@@ -29,8 +29,8 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         return mView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         initData()
     }
 
@@ -43,6 +43,9 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
     }
 
     fun <T : View> findId(id: Int): T {
-        return mView!!.findViewById(id) as T
+        if (mView == null)
+            throw NullPointerException("rootView is null")
+        else
+            return mView!!.findViewById(id) as T
     }
 }

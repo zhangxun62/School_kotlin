@@ -17,11 +17,11 @@ import retrofit2.http.POST
  */
 interface Api {
 
-    @POST("restful/users/login")
+    @POST("restful/users")
     @Headers("Content-Type:application/json") //需要添加头
     fun login(@Body body: RequestBody): Flowable<HttpResponse<UserInfo>>
 
-    @POST("restful/users/register")
+    @POST("restful/users")
     @Headers("Content-Type:application/json") //需要添加头
     fun register(@Body body: RequestBody): Flowable<HttpResponse<Object>>
 }

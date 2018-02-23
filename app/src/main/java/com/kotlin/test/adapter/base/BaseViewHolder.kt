@@ -50,7 +50,7 @@ class BaseViewHolder : RecyclerView.ViewHolder {
 
     companion object {
         fun createViewHolder(context: Context, parent: ViewGroup, layoutId: Int): BaseViewHolder {
-            var itemView = LayoutInflater.from(context).inflate(layoutId, parent, false) as View
+            var itemView = LayoutInflater.from(context).inflate(layoutId, parent, false)
             return BaseViewHolder(itemView)
         }
 

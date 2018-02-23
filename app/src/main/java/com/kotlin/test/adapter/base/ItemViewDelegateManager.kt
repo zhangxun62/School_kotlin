@@ -17,10 +17,8 @@ class ItemViewDelegateManager<T> {
 
     fun addDelegate(delegate: ItemViewDelegate<T>): ItemViewDelegateManager<T> {
         var itemType: Int = delegates.size()
-        if (delegate != null) {
-            delegates.put(itemType, delegate)
-            itemType++
-        }
+        delegates.put(itemType, delegate)
+        itemType++
         return this
     }
 

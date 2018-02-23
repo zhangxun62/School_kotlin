@@ -23,7 +23,7 @@ class Preference<T>(val context: Context, private val key: String, private val d
 
     private val prefs by lazy { context.getSharedPreferences("default", Context.MODE_PRIVATE) }
     private fun <U> findPreference(key: String, default: U): U = with(prefs) {
-        val res: Any = when (default) {
+        val res = when (default) {
             is Long -> getLong(key, default)
             is String -> getString(key, default)
             is Int -> getInt(key, default)

@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
 import com.kotlin.test.util.RsaUtil
+import com.kotlin.test.util.RxJavaUtil
 import com.kotlin.test.widget.ClearEditText
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 /**
  * @Title RegisterFragment
@@ -33,16 +35,14 @@ class RegisterFragment : BaseFragment() {
     }
 
     override fun initData() {
-        id_btn_register.setOnClickListener(this)
+        RxJavaUtil.clickView(id_btn_register).throttleFirst(1500, TimeUnit.MILLISECONDS).subscribe {
+            submit()
+        }
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.id_btn_register -> {
-                submit()
-            }
-            else -> {
-            }
+
         }
     }
 
@@ -65,6 +65,7 @@ class RegisterFragment : BaseFragment() {
         var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), RsaUtil.encryptWithRSA(Gson().toJson(map)))
         HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
             Log.i("测试", Gson().toJson(t))
+
         }, { t ->
             t.printStackTrace()
             if (t is HttpException) {

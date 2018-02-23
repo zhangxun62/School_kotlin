@@ -10,7 +10,7 @@ import com.kotlin.test.adapter.base.ItemViewDelegate
  * @Date: 2017/6/30.14:15
  * @E-mail: 49467306@qq.com
  */
-open abstract class CommonAdapter<T> : MultiItemCommonAdapter<T> {
+abstract class CommonAdapter<T> : MultiItemCommonAdapter<T> {
     private var mDatas: List<T>? = null
     private var mLayoutId: Int
 
