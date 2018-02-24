@@ -19,6 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_login.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 
@@ -43,7 +44,7 @@ class LoginFragment : BaseFragment() {
         id_tv_register.setOnClickListener(this)
 //        id_btn_login.setOnClickListener(this)
         RxJavaUtil.clickView(id_btn_login).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe {
-                        initLogin()
+            initLogin()
 //            var password = findId<EditText>(R.id.id_et_password)
 //            TransitionManager.beginDelayedTransition(id_rootLayout, AutoTransition())
 //            if (password.visibility != View.VISIBLE) {
@@ -98,9 +99,16 @@ class LoginFragment : BaseFragment() {
             t.printStackTrace()
             if (t is HttpException) {
                 var e: HttpException = t
-                Log.i("测试", e.response().errorBody()!!.string())
+                var msg = e.response().errorBody()!!.string()
+                Log.i("测试", msg)
+                toast(JSONObject(msg)["msg"] as String)
             }
 
         })
+    }
+
+    fun setAccount(text: String) {
+        var account = findId<ClearEditText>(R.id.id_et_account)
+        account.setText(text)
     }
 }

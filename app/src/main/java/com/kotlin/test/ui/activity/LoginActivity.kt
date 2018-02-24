@@ -23,5 +23,10 @@ class LoginActivity : BaseActivity() {
     override fun onClick(v: View?) {
     }
 
+    fun reLogin(account: String) {
+        var fragment: LoginFragment = supportFragmentManager.findFragmentByTag(LoginFragment::class.java.simpleName) as LoginFragment
+        fragment.setAccount(account)
+        addFragment(R.id.id_container, fragment)
+    }
 
 }

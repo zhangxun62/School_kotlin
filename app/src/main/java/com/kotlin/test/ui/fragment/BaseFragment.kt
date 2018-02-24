@@ -48,4 +48,5 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         else
             return mView!!.findViewById(id) as T
     }
+
 }

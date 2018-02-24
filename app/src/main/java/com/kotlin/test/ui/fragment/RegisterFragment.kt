@@ -7,6 +7,7 @@ import android.widget.EditText
 import com.google.gson.Gson
 import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
+import com.kotlin.test.ui.activity.LoginActivity
 import com.kotlin.test.util.RsaUtil
 import com.kotlin.test.util.RxJavaUtil
 import com.kotlin.test.widget.ClearEditText
@@ -15,7 +16,9 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.HttpException
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -64,13 +67,15 @@ class RegisterFragment : BaseFragment() {
         map.put("password", password.text.toString())
         var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), RsaUtil.encryptWithRSA(Gson().toJson(map)))
         HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
-            Log.i("测试", Gson().toJson(t))
-
+            toast(t.msg)
+            (context as LoginActivity).reLogin(account.text.toString())
         }, { t ->
             t.printStackTrace()
             if (t is HttpException) {
                 var e: HttpException = t
-                Log.i("测试", e.response().errorBody()!!.string())
+                var msg = e.response().errorBody()!!.string()
+                Log.i("测试", msg)
+                toast(JSONObject(msg)["msg"] as String)
             }
         })
     }
