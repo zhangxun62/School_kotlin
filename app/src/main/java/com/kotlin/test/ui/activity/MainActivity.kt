@@ -2,6 +2,7 @@ package com.kotlin.test.ui.activity
 
 import android.graphics.drawable.Drawable
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.View
 import com.kotlin.test.R
 import com.kotlin.test.ui.fragment.HomeFragment
@@ -60,6 +61,11 @@ class MainActivity : BaseActivity(), MDTabLayout.ItemCheckedListener {
         override fun getText(position: Int): CharSequence {
             return mMenus[position]
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Log.d("测试", "onBackPressed")
     }
 
 

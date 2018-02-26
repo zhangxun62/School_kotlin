@@ -1,6 +1,7 @@
 package com.kotlin.test.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -11,17 +12,17 @@ import kotlin.reflect.KProperty
  * @Date: 2017/9/19.14:06
  * @E-mail: 49467306@qq.com
  */
-class Preference<T>(val context: Context, private val key: String, private val default: T) : ReadWriteProperty<Any?, T> {
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+class Preference<T>(val context: Context, private val key: String, private val default: T) {
+    private val prefs: SharedPreferences by lazy { context.getSharedPreferences("default", Context.MODE_PRIVATE) }
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return findPreference(key, default)
     }
 
-
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         putPreference(key, default)
     }
 
-    private val prefs by lazy { context.getSharedPreferences("default", Context.MODE_PRIVATE) }
     private fun <U> findPreference(key: String, default: U): U = with(prefs) {
         val res = when (default) {
             is Long -> getLong(key, default)
@@ -31,7 +32,7 @@ class Preference<T>(val context: Context, private val key: String, private val d
             is Float -> getFloat(key, default)
             else -> throw IllegalArgumentException("This type can be saved into Preferences")
         }
-        res as U
+        return res as U
     }
 
     private fun <U> putPreference(key: String, default: U) = with(prefs.edit()) {
@@ -43,6 +44,20 @@ class Preference<T>(val context: Context, private val key: String, private val d
             is Float -> putFloat(key, default)
             else -> throw IllegalArgumentException("This type can be saved into Preferences")
         }.apply()
+    }
+
+    /**
+     * 删除全部数据
+     */
+    fun clearPreference() {
+        prefs.edit().clear().commit()
+    }
+
+    /**
+     * 根据key删除存储数据
+     */
+    fun clearPreference(key: String) {
+        prefs.edit().remove(key).commit()
     }
 
 }

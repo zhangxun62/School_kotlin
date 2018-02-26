@@ -13,5 +13,5 @@ data class UserInfo(
         var age: Int,
         var gender: Int,
         var phoneNumber: String,
-        var uuid: String
+        var token: String
 )

@@ -21,18 +21,20 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
      * 获取内容View
      * @return View
      */
-    abstract protected fun getContentView(): View?
+    protected abstract fun getContentView(): View?
 
     /**
      * 通过资源id来获取View
      * @return Int
      */
-    abstract protected fun getContentViewLayoutId(): Int
+    protected abstract fun getContentViewLayoutId(): Int
 
+    /**
+     *
+     */
+    protected abstract fun initViews()
 
-    abstract protected fun initViews()
-
-    abstract protected fun initData()
+    protected abstract fun initData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
