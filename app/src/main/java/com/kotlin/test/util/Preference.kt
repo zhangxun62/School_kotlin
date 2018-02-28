@@ -2,7 +2,6 @@ package com.kotlin.test.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
@@ -20,7 +19,7 @@ class Preference<T>(val context: Context, private val key: String, private val d
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        putPreference(key, default)
+        putPreference(key, value)
     }
 
     private fun <U> findPreference(key: String, default: U): U = with(prefs) {
@@ -32,7 +31,7 @@ class Preference<T>(val context: Context, private val key: String, private val d
             is Float -> getFloat(key, default)
             else -> throw IllegalArgumentException("This type can be saved into Preferences")
         }
-        return res as U
+        return@with res as U
     }
 
     private fun <U> putPreference(key: String, default: U) = with(prefs.edit()) {

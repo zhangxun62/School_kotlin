@@ -2,9 +2,10 @@ package com.kotlin.test.ui.activity
 
 import android.graphics.drawable.Drawable
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import com.kotlin.test.R
+import com.kotlin.test.base.BaseActivity
 import com.kotlin.test.ui.fragment.HomeFragment
 import com.kotlin.test.widget.mdtablayout.MDTabLayout
 import com.kotlin.test.widget.mdtablayout.adapter.TabAdapter
@@ -63,11 +64,21 @@ class MainActivity : BaseActivity(), MDTabLayout.ItemCheckedListener {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        Log.d("测试", "onBackPressed")
-    }
 
+    private var exitTime: Long = 0
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                toast("再按一次退出程序")
+                exitTime = System.currentTimeMillis()
+            } else {
+                finish()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     companion object {
 

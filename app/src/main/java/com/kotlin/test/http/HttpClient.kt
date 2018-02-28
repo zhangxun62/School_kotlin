@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.kotlin.test.app.MyApplication
 import okhttp3.*
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * @E-mail: 49467306@qq.com
  */
 class HttpClient {
-    var mRetrofit: Retrofit? = null
+    private var mRetrofit: Retrofit? = null
     private fun retrofit(): Retrofit {
         if (mRetrofit == null) {
             var builder = OkHttpClient.Builder()
@@ -39,7 +40,7 @@ class HttpClient {
                 var response: Response = chain.proceed(request)
 
                 if (isNetWorkAvailable(MyApplication.context)) {
-                    var maxAge: Int = 0
+                    var maxAge = 0
                     // 有网络时 设置缓存超时时间0个小时
                     response.newBuilder()
                             .header("Cache-Control", "public,max-age=" + maxAge)
@@ -60,7 +61,7 @@ class HttpClient {
             /**
              *  公共参数，代码略
              */
-            var addQueryParameterInterceptor: Interceptor = Interceptor { chain ->
+            var addQueryParameterInterceptor = Interceptor { chain ->
                 var request = chain.request()
                 var method: String = request.method()
                 var headers: Headers = request.headers()
@@ -119,11 +120,17 @@ class HttpClient {
         return mRetrofit!!
     }
 
-    val mApi: Api
+    val service: Api
         get() = retrofit().create(Api::class.java)
 
     companion object {
-        val SERVER_HOST: String = "http://192.168.1.93/"
+        private const val SERVER_HOST: String = "http://192.168.1.93/"
+    }
+
+    private fun getLogInterceptor(): Interceptor {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        return interceptor
     }
 
     /**

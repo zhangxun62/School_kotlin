@@ -9,7 +9,8 @@ import android.widget.TextView
 import com.google.gson.Gson
 import com.kotlin.test.R
 import com.kotlin.test.http.HttpClient
-import com.kotlin.test.ui.activity.BaseActivity
+import com.kotlin.test.base.BaseActivity
+import com.kotlin.test.base.BaseFragment
 import com.kotlin.test.ui.activity.MainActivity
 import com.kotlin.test.util.ActivityCollector
 import com.kotlin.test.util.Preference
@@ -23,7 +24,6 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
-import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
 
@@ -47,9 +47,31 @@ class LoginFragment : BaseFragment() {
     override fun initData() {
         var token: String by Preference(context, "token", "")
         if (!token.isNullOrEmpty()) {
-            startActivity(Intent(context, MainActivity::class.java))
-            ActivityCollector.removeActivity(context)
-            (context as Activity).finish()
+            var map = HashMap<String, String>()
+            map["token"] = token
+            var data = RsaUtil.encryptWithRSA(Gson().toJson(map))
+            var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), data)
+            HttpClient().service.loginByToken(body)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        if (it.msg == "登录成功") {
+                            startActivity(Intent(context, MainActivity::class.java))
+                            ActivityCollector.removeActivity(context)
+                            (context as Activity).finish()
+                        } else {
+                            toast("账户失效,请您重新登录")
+                        }
+                    }, { t ->
+                        t.printStackTrace()
+                        if (t is HttpException) {
+                            var e: HttpException = t
+                            var msg = e.response().errorBody()!!.string()
+                            Log.i("测试", msg)
+                            toast(JSONObject(msg)["msg"] as String)
+                        }
+                    })
+
 
         }
         // 自动写入常用登录名
@@ -96,13 +118,14 @@ class LoginFragment : BaseFragment() {
         map["password"] = password.text.toString()
         var data = RsaUtil.encryptWithRSA(Gson().toJson(map))
         var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), data)
-        HttpClient().mApi.login(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
-            Preference(context, "account", map["account"])
+        HttpClient().service.login(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
+            Log.d("登录", Gson().toJson(t))
+            var i by Preference(context, "account", map["account"])
             // 遍历实体类 取得实体类属性和类型，属性值
             for (field in t.data.javaClass.declaredFields) {
                 field.isAccessible = true
                 Log.d(field.name, field.get(t.data).toString())
-                Preference(context, field.name, field.get(t.data))
+                var i by Preference(context, field.name, field.get(t.data))
             }
             startActivity(Intent(context, MainActivity::class.java))
             ActivityCollector.removeActivity(context)

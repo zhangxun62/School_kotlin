@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import com.google.gson.Gson
 import com.kotlin.test.R
+import com.kotlin.test.base.BaseFragment
 import com.kotlin.test.http.HttpClient
 import com.kotlin.test.ui.activity.LoginActivity
 import com.kotlin.test.util.RsaUtil
@@ -66,7 +67,7 @@ class RegisterFragment : BaseFragment() {
         map.put("account", account.text.toString())
         map.put("password", password.text.toString())
         var body: RequestBody = RequestBody.create(MediaType.parse("text/plain"), RsaUtil.encryptWithRSA(Gson().toJson(map)))
-        HttpClient().mApi.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
+        HttpClient().service.register(body).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe({ t ->
             toast(t.msg)
             (context as LoginActivity).reLogin(account.text.toString())
         }, { t ->

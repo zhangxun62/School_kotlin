@@ -1,6 +1,7 @@
-package com.kotlin.test.ui.activity
+package com.kotlin.test.base
 
-import android.R
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -38,11 +39,11 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getContentView() != null) {
-            setContentView(getContentView())
-        }
-        else {
+        var rooView = getContentView()
+        if (rooView == null) {
             setContentView(getContentViewLayoutId())
+        } else {
+            setContentView(rooView)
         }
         ActivityCollector.addActivity(this)
 
@@ -66,32 +67,45 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
         Log.d(T::class.simpleName, log.toString())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        ActivityCollector.removeActivity(this)
+    }
+
+
     /**
      * 添加Fragment
      * @param containerId
      * @param fragment
      */
+    @SuppressLint("RestrictedApi")
     fun addFragment(containerId: Int, fragment: Fragment) {
-        var fragments: List<Fragment>? = supportFragmentManager.fragments
-        if (fragment.isAdded) {
-            if (fragments != null) {
-                for (fragmentOld in fragments) {
-                    supportFragmentManager.beginTransaction().hide(fragmentOld).commitAllowingStateLoss()
-                }
-            }
-            supportFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss()
-        } else {
-            if (fragments != null) {
-                for (fragmentOld in fragments) {
-                    supportFragmentManager.beginTransaction().hide(fragmentOld).commitAllowingStateLoss()
-                }
-            }
-            supportFragmentManager.beginTransaction().add(containerId, fragment, fragment.javaClass.simpleName).show(fragment).commitNowAllowingStateLoss()
+        var transaction = supportFragmentManager.beginTransaction()
+        var fragments = supportFragmentManager.fragments
+        if (fragments != null) {
+            fragments.filter { it.id == fragment.id }.map { transaction.hide(it) }
         }
+        if (!fragment.isAdded) {
+            transaction.add(containerId, fragment, fragment.javaClass.simpleName)
+        }
+        transaction.show(fragment)
+        transaction.commit()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        ActivityCollector.removeActivity(this)
+    fun startActivity(targetActivity: Class<*>) {
+        startActivity(Intent(this, targetActivity))
     }
+
+    fun startActivity(targetActivity: Class<*>, bundle: Bundle?) {
+        startActivity(Intent(this, targetActivity).putExtras(bundle))
+    }
+
+    fun startActivityForResult(cls: Class<*>, bundle: Bundle?, requestCode: Int) {
+        val intent = Intent()
+        intent.setClass(this, cls)
+        intent.putExtras(bundle)
+        startActivityForResult(intent, requestCode)
+    }
+
+
 }

@@ -1,7 +1,8 @@
-package com.kotlin.test.ui.fragment
+package com.kotlin.test.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,16 +18,14 @@ import android.widget.Toast
 abstract class BaseFragment : Fragment(), View.OnClickListener {
     protected abstract fun getFragmentView(): View?
     protected abstract fun getFragmentViewByLayoutId(): Int
-    private var mView: View? = null
+
     protected abstract fun initData()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (getFragmentView() != null) {
-            mView = getFragmentView()
+        var view = getFragmentView()
+        if (view == null) {
+            view = inflater.inflate(getFragmentViewByLayoutId(), container, false)
         }
-        if (mView == null)
-            mView = inflater.inflate(getFragmentViewByLayoutId(), container, false)
-
-        return mView
+        return view
     }
 
     override fun onStart() {
@@ -42,11 +41,16 @@ abstract class BaseFragment : Fragment(), View.OnClickListener {
         Toast.makeText(context, msg, flag).show()
     }
 
+    inline fun <reified T> debug(log: Any) {
+        Log.d(T::class.simpleName, log.toString())
+    }
+
     fun <T : View> findId(id: Int): T {
-        if (mView == null)
+        if (view == null) {
             throw NullPointerException("rootView is null")
-        else
-            return mView!!.findViewById(id) as T
+        } else {
+            return view!!.findViewById(id) as T
+        }
     }
 
 }

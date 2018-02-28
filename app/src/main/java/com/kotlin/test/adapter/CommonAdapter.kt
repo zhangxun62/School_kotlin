@@ -11,11 +11,11 @@ import com.kotlin.test.adapter.base.ItemViewDelegate
  * @E-mail: 49467306@qq.com
  */
 abstract class CommonAdapter<T> : MultiItemCommonAdapter<T> {
-    private var mDatas: List<T>? = null
+    private var mData: List<T>? = null
     private var mLayoutId: Int
 
     constructor(layoutId: Int, datas: List<T>) : super(datas) {
-        mDatas = datas
+        mData = datas
         mLayoutId = layoutId
         addItemDelegate(object : ItemViewDelegate<T> {
             override fun getViewItemLayoutId(): Int {

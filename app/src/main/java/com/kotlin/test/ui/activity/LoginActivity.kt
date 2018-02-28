@@ -2,6 +2,7 @@ package com.kotlin.test.ui.activity
 
 import android.view.View
 import com.kotlin.test.R
+import com.kotlin.test.base.BaseActivity
 import com.kotlin.test.ui.fragment.LoginFragment
 
 class LoginActivity : BaseActivity() {

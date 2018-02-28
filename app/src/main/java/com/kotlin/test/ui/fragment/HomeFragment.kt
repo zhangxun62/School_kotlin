@@ -8,6 +8,11 @@ import android.widget.TextView
 import com.kotlin.test.R
 import com.kotlin.test.adapter.CommonAdapter
 import com.kotlin.test.adapter.base.BaseViewHolder
+import com.kotlin.test.base.BaseFragment
+import com.kotlin.test.entity.Question
+import com.kotlin.test.http.HttpClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -18,8 +23,11 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * @E-mail: 49467306@qq.com
  */
 class HomeFragment : BaseFragment() {
-    var mTitle: String = ""
-    private var mAdapter: CommonAdapter<String>? = null
+    private var mTitle: String = ""
+    private val mList: ArrayList<Question> by lazy {
+        ArrayList<Question>()
+    }
+    private var mAdapter: CommonAdapter<Question>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (this.arguments != null) {
@@ -41,16 +49,23 @@ class HomeFragment : BaseFragment() {
     override fun initData() {
         id_recyclerView.layoutManager = LinearLayoutManager(context)
         id_recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        val asc = Array(5, { i -> (i * i).toString() })
         if (mAdapter == null) {
-            mAdapter = object : CommonAdapter<String>(android.R.layout.simple_list_item_1, asc.asList()) {
-                override fun convert(holder: BaseViewHolder, item: String, position: Int) {
+            mAdapter = object : CommonAdapter<Question>(android.R.layout.simple_list_item_1, mList) {
+                override fun convert(holder: BaseViewHolder, item: Question, position: Int) {
                     var view = holder.itemView as TextView
-                    view.text = item
                 }
             }
         }
         id_recyclerView.adapter = mAdapter
+
+        HttpClient().service.getQuestionsList(1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    mList.clear()
+                    it.data.map { mList.add(it) }
+                    mAdapter!!.notifyDataSetChanged()
+                })
     }
 
     companion object {
