@@ -82,7 +82,7 @@ class MainActivity : BaseActivity(), MDTabLayout.ItemCheckedListener {
 
     companion object {
 
-        private val mMenus = arrayOf("智能助理", "照片", "相册")
+        private val mMenus = arrayOf("首页", "提问", "个人")
     }
 
 }

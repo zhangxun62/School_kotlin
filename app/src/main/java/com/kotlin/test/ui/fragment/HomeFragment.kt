@@ -53,6 +53,7 @@ class HomeFragment : BaseFragment() {
             mAdapter = object : CommonAdapter<Question>(android.R.layout.simple_list_item_1, mList) {
                 override fun convert(holder: BaseViewHolder, item: Question, position: Int) {
                     var view = holder.itemView as TextView
+                    view.text = item.title
                 }
             }
         }
